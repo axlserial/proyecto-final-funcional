@@ -130,18 +130,6 @@ dmypy.json
 
 # pycache
 __pycache__/
-Práctica 3.1. Funciones/entrega/pyvenv.cfg
-Práctica 3.1. Funciones/entrega/Scripts/activate
-Práctica 3.1. Funciones/entrega/Scripts/activate.bat
-Práctica 3.1. Funciones/entrega/Scripts/Activate.ps1
-Práctica 3.1. Funciones/entrega/Scripts/deactivate.bat
-Práctica 3.1. Funciones/entrega/Scripts/pip.exe
-Práctica 3.1. Funciones/entrega/Scripts/pip3.10.exe
-Práctica 3.1. Funciones/entrega/Scripts/pip3.11.exe
-Práctica 3.1. Funciones/entrega/Scripts/pip3.exe
-Práctica 3.1. Funciones/entrega/Scripts/python.exe
-Práctica 3.1. Funciones/entrega/Scripts/pythonw.exe
-.gitignore
 
 # vscode
 .vscode/
