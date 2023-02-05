@@ -1,18 +1,18 @@
 from typing import Callable
-from payload import generate_payload
+from .payload import generate_payload
 import requests
 
 # Clousure que devuelve una función según lo que se quiere obtener
 def get_data(type: str) -> Callable:
-    def get_personajes() -> dict:
+    def get_personajes():
         payload = generate_payload()
         # Hace la petición
-        response = requests.get('https://gateway.marvel.com:443/v1/public/personajes',params=payload)
-
+        payload['limit'] = 100
+        response = requests.get('https://gateway.marvel.com:443/v1/public/characters',params=payload)
         # Si la petición es correcta
         if response.status_code == 200:
             # Devuelve los comics
-            return response.json()['data']['results']
+            return [{"id":data['id'],"nombre":data['name'],"descripcion":data['description'],"imagen":data['thumbnail']['path']+"."+data['thumbnail']['extension']} for data in response.json()['data']['results']]
 
         # Si la petición no es correcta
         else:
@@ -24,4 +24,6 @@ def get_data(type: str) -> Callable:
     else:
         return None
 
-print(get_data("personajes"))
+
+#a = get_data("personajes")
+#a()

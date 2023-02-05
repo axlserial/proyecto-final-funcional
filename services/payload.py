@@ -1,4 +1,4 @@
-from keys import PUBLIC_KEY, PRIVATE_KEY
+from .keys import PUBLIC_KEY, PRIVATE_KEY
 import hashlib
 import time
 
