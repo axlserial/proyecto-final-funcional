@@ -137,3 +137,6 @@ __pycache__/
 
 # keys
 /services/keys.py
+
+# misc
+marvel_api_funcional.egg-info/
