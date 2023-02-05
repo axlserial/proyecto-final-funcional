@@ -1,15 +1,13 @@
 from flet import Page,MainAxisAlignment,CrossAxisAlignment,Row,Card,Text,colors,border,border_radius,app,IconButton,Container,Stack,alignment,icons,WEB_BROWSER,Column,ListTile,Image,ImageFit,TextAlign
-import requests as rq
 import services.personajes as PJ
 
 def main(page:  Page):
 
-    page.title = "Flet counter example"
+    page.title = "Personajes"
     page.vertical_alignment =  MainAxisAlignment.CENTER
     page.horizontal_alignment =  CrossAxisAlignment.CENTER
 
     requestF = PJ.get_data("personajes")()
-    print(len(requestF))
     #Funcion de control de paginas
     def next_page(e):
         r.controls.clear()
@@ -31,33 +29,42 @@ def main(page:  Page):
             cards()
 
     def cards():
-        for i in range((int(txt_number.value)*10)-9,(int(txt_number.value)*10)):
-            r.controls.append(
-                Card(
-                    Container(
-                        Column(
-                            [
-                                Text(requestF[i-1]["nombre"], text_align = "center" , selectable=False),
-                                Image(
-                                    src=requestF[i-1]['imagen'],
-                                    width=100,
-                                    height=100,
-                                ),
-                                Text(requestF[i-1]["id"],selectable=False,text_align = "center"), 
-                                Text(requestF[i-1]["descripcion"],selectable=False,text_align = "center"),
-                            ],
-                            alignment=MainAxisAlignment.CENTER,
-                            horizontal_alignment = CrossAxisAlignment.CENTER,
+        if requestF != {}:
+            for i in range((int(txt_number.value)*10)-9,(int(txt_number.value)*10)):
+                r.controls.append(
+                    Card(
+                        Container(
+                            Column(
+                                [
+                                    Text(requestF[i-1]["nombre"], text_align = "center" , selectable=False),
+                                    Image(
+                                        src=requestF[i-1]['imagen'],
+                                        width=100,
+                                        height=100,
+                                    ),
+                                    Text(requestF[i-1]["id"],selectable=False,text_align = "center"), 
+                                    Text(requestF[i-1]["descripcion"],selectable=False,text_align = "center"),
+                                ],
+                                alignment=MainAxisAlignment.CENTER,
+                                horizontal_alignment = CrossAxisAlignment.CENTER,
+                            ),
+                            bgcolor= colors.RED,
+                            border= border.all(1,  colors.RED_400),
+                            border_radius= border_radius.all(5),
+                            alignment = alignment.center,
                         ),
-                        bgcolor= colors.RED,
-                        border= border.all(1,  colors.RED_400),
-                        border_radius= border_radius.all(5),
-                        alignment = alignment.center,
-                    ),
-                    
-                    width=200,
-                    height=200,
+                        
+                        width=200,
+                        height=200,
+                    )
                 )
+        else:
+            r.controls.append(
+                Container(
+                    Text("No hay personajes", text_align = "center" , selectable=False),
+                ),
+                width=200,
+                height=200,
             )
 
         page.update()
