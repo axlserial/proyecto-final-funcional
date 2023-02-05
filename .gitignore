@@ -137,3 +137,4 @@ __pycache__/
 
 # keys
 /services/keys.py
+pyvenv.cfg
