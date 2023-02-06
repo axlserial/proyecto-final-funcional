@@ -1,4 +1,4 @@
-from flet import Page,MainAxisAlignment,CrossAxisAlignment,Row,Card,Text,colors,border,border_radius,app,IconButton,Container,Stack,alignment,icons,WEB_BROWSER,Column,ListTile,Image,ImageFit,TextAlign,ElevatedButton,Dropdown,dropdown,GridView
+from flet import Page,MainAxisAlignment,CrossAxisAlignment,Row,Card,Text,colors,border,border_radius,app,IconButton,Container,Stack,alignment,icons,WEB_BROWSER,Column,Image,Dropdown,dropdown,margin,theme
 import services.personajes as PJ
 
 def main(page:  Page):
@@ -7,16 +7,15 @@ def main(page:  Page):
     page.vertical_alignment =  MainAxisAlignment.CENTER
     page.horizontal_alignment =  CrossAxisAlignment.CENTER
     requestF = PJ.get_data("personajes")()
-    
     #Funcion de control de paginas
     def next_page(e):
         r.controls.clear()
         if int(txt_number.value) < int(totalPages.value) :
             txt_number.value = int(txt_number.value) +1
-            cards()
+            cards(page.client_storage.get("objectsPage"))
         else:
             txt_number.value = 1
-            cards()
+            cards(page.client_storage.get("objectsPage"))
 
     def before_page(e):
         r.controls.clear()
@@ -31,32 +30,29 @@ def main(page:  Page):
     def cards(cardsPage):
         if cardsPage != []:
             if int(txt_number.value) == int(totalPages.value):
-                print(len(cardsPage))
                 for i in range(((-9)+(int(txt_number.value)*9))+1, (len(cardsPage))+1):
-                    print("tarjeta numero ",i)
                     r.controls.append(
                         Card(
                             Container(
                                 Column(
                                     [
-                                        Text(cardsPage[i-1]["nombre"], text_align = "center" , selectable=False),
+                                        Text(cardsPage[i-1]["nombre"],color = "#381e72", text_align = "center" , selectable=False , ),
                                         Image(
                                             src=cardsPage[i-1]['imagen'],
                                             width=100,
                                             height=100,
                                         ),
-                                        Text(cardsPage[i-1]["id"],selectable=False,text_align = "center"), 
-                                        Text(cardsPage[i-1]["descripcion"][:23]+"...",selectable=False,text_align = "center"),
+                                        Text(cardsPage[i-1]["id"],color = "#381e72",selectable=False,text_align = "center", ), 
+                                        Text(cardsPage[i-1]["descripcion"][:23]+"...",color = "#381e72",selectable=False,text_align = "center",),
                                     ],
                                     alignment=MainAxisAlignment.CENTER,
                                     horizontal_alignment = CrossAxisAlignment.CENTER,
                                 ),
-                                bgcolor= colors.RED,
-                                border= border.all(1,  colors.RED_400),
+                                bgcolor= "#cfbcff",
+                                border= border.all(1,  "#C4ACFF"),
                                 border_radius= border_radius.all(5),
                                 alignment = alignment.center,
                             ),
-                            
                             width=200,
                             height=200,
                         )
@@ -68,24 +64,23 @@ def main(page:  Page):
                             Container(
                                 Column(
                                     [
-                                        Text(cardsPage[i-1]["nombre"], text_align = "center" , selectable=False),
+                                        Text(cardsPage[i-1]["nombre"],color = "#381e72", text_align = "center" , selectable=False , ),
                                         Image(
                                             src=cardsPage[i-1]['imagen'],
                                             width=100,
                                             height=100,
                                         ),
-                                        Text(cardsPage[i-1]["id"],selectable=False,text_align = "center"), 
-                                        Text(cardsPage[i-1]["descripcion"][:23]+"...",selectable=False,text_align = "center"),
+                                        Text(cardsPage[i-1]["id"],color = "#381e72",selectable=False,text_align = "center" , ), 
+                                        Text(cardsPage[i-1]["descripcion"][:23]+"...",color = "#381e72",selectable=False,text_align = "center", ),
                                     ],
                                     alignment=MainAxisAlignment.CENTER,
                                     horizontal_alignment = CrossAxisAlignment.CENTER,
                                 ),
-                                bgcolor= colors.RED,
-                                border= border.all(1,  colors.RED_400),
+                                bgcolor= "#cfbcff",
+                                border= border.all(1, "#C4ACFF"),
                                 border_radius= border_radius.all(5),
                                 alignment = alignment.center,
                             ),
-                            
                             width=200,
                             height=200,
                         )
@@ -96,13 +91,13 @@ def main(page:  Page):
                     Container(
                         Column(
                             [
-                                Text("No hay personajes", text_align = "center" , selectable=False),
+                                Text("No hay personajes", text_align = "center" ,color = "#381e72", selectable=False ),
                             ],
                             alignment=MainAxisAlignment.CENTER,
                             horizontal_alignment = CrossAxisAlignment.CENTER,
                         ),
-                        bgcolor= colors.RED,
-                        border= border.all(1,  colors.RED_400),
+                        bgcolor= "#ffb4ab",
+                        border= border.all(1,"#FCA196"),
                         border_radius= border_radius.all(5),
                         alignment = alignment.center,
                     ),
@@ -128,11 +123,29 @@ def main(page:  Page):
             else :
                 totalPages.value = int(len(page.client_storage.get("objectsPage")) / 9) + 1
         elif dd.value == "The *Avengers* comics":
-            page.client_storage.set("objectsPage",[])
+            unique_sweets = []
+            [unique_sweets.append(sweet) for sweet in [data for data in requestF for comic in data['comics'] if 'Avengers' in comic] if sweet not in unique_sweets]
+            page.client_storage.set("objectsPage",unique_sweets)
+            if len(page.client_storage.get("objectsPage")) % 9 == 0:
+                totalPages.value = int(len(page.client_storage.get("objectsPage")) / 9)
+            else :
+                totalPages.value = int(len(page.client_storage.get("objectsPage")) / 9) + 1
         elif dd.value == "X-MEN comics":
-            page.client_storage.set("objectsPage",[])
+            unique_sweets = []
+            [unique_sweets.append(sweet) for sweet in [data for data in requestF for comic in data['comics'] if 'X-MEN' in comic] if sweet not in unique_sweets]
+            page.client_storage.set("objectsPage",unique_sweets)
+            if len(page.client_storage.get("objectsPage")) % 9 == 0:
+                totalPages.value = int(len(page.client_storage.get("objectsPage")) / 9)
+            else :
+                totalPages.value = int(len(page.client_storage.get("objectsPage")) / 9) + 1
 
         cards(page.client_storage.get("objectsPage"))
+
+    def  GoHome():
+        page.views.pop()
+        top_view = page.views[-1]
+        page.go(top_view.route)
+
 
     dd = Dropdown(
         width=250,
@@ -155,10 +168,17 @@ def main(page:  Page):
     page.add(
         Column(
             
-            [
+            [   
                 Container(
-                    content = Text("Personajes", text_align="center", size=30, color="#ede0de"),
-                    padding= 10,
+                    content = IconButton( icon=icons.HOME, on_click=GoHome, data=0 , icon_size=35),
+                    padding= 0,
+                    margin = margin.only(left=10,top = 0 , right= 0, bottom= 0),
+                    alignment= alignment.center_left,
+                ),
+                Container(
+                    content = Text("Personajes", text_align="center", size=30, color = "#ffb0c9"),
+                    padding= 0,
+                    margin = margin.only(left=0,top = 0 , right= 0, bottom= 5),
                     alignment= alignment.top_center,
                 ),
                 Container(
@@ -178,7 +198,6 @@ def main(page:  Page):
                     padding=5,
                     width=800,
                     height=650,
-                    bgcolor= colors.WHITE,
                     alignment= alignment.center,
                 ),
                 #Fila de flechas pra siguiente pagina
@@ -201,7 +220,6 @@ def main(page:  Page):
             horizontal_alignment = CrossAxisAlignment.CENTER,
             alignment= "center",
         ),
-        
     )
 
 
