@@ -3,28 +3,25 @@ from .payload import generate_payload
 import requests
 
 
-# Clousure que devuelve una función según lo que se quiere obtener
-def get_data(type: str) -> Callable:
-    if type == 'comics':
-        return get_comics
-    else:
-        return None
+# Clousure para obtener los comics
+def get_comics(pagination: dict[str, int]):
 
+    def get_data():
+        payload = generate_payload()
 
-# Función para obtener los comics
-def get_comics() -> dict:
+        # Añade la paginación
+        payload.update(pagination)
 
-    payload = generate_payload()
-    # Hace la petición
-    response = requests.get('https://gateway.marvel.com:443/v1/public/comics',
-                            params=payload)
+        # Hace la petición
+        response = requests.get(
+            'https://gateway.marvel.com:443/v1/public/comics', params=payload)
 
-    # Si la petición es correcta
-    if response.status_code == 200:
-        # Devuelve los comics
-        return response.json()['data']['results']
+        result: dict = {}
 
-    # Si la petición no es correcta
-    else:
-        # Devuelve un diccionario vacío
-        return {}
+        # Si la petición es correcta
+        if response.status_code == 200:
+            result = response.json()['data']
+
+        return result
+
+    return get_data
