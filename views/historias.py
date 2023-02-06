@@ -1,4 +1,4 @@
-from flet import Page,MainAxisAlignment,CrossAxisAlignment,Row,Card,Text,border,border_radius,app,IconButton,Container,Stack,alignment,icons,WEB_BROWSER,Column,Dropdown,dropdown,margin,padding,AlertDialog,ListView
+from flet import Page,MainAxisAlignment,CrossAxisAlignment,Row,Card,Text,border,border_radius,app,IconButton,Container,Stack,alignment,icons,WEB_BROWSER,Column,Dropdown,dropdown,margin,padding
 import services.historias as PJ
 
 def main(page:  Page):
@@ -31,7 +31,7 @@ def main(page:  Page):
                             Container(
                                 Column(
                                     [
-                                        Text(cardsPage[i-1]["id"],color = "#381e72",selectable=False,text_align = "center" , ),
+                                        Text(cardsPage[i-1]["id"],color = "#381e72",selectable=False,text_align = "center" ,size=12 , ),
                                         Text(cardsPage[i-1]["comics"][0],color = "#381e72", text_align = "justify" , selectable=False , ),
                                     ],
                                     alignment=MainAxisAlignment.START,
@@ -54,7 +54,7 @@ def main(page:  Page):
                             Container(
                                 Column(
                                     [
-                                        Text(cardsPage[i-1]["id"],color = "#381e72",selectable=False,text_align = "center" , ),
+                                        Text(cardsPage[i-1]["id"],color = "#381e72",selectable=False,text_align = "center" , size=12 ,),
                                         Text(cardsPage[i-1]["comics"][0],color = "#381e72", text_align = "justify" , selectable=False , ),
                                     ],
                                     alignment=MainAxisAlignment.START,
@@ -101,7 +101,7 @@ def main(page:  Page):
         if dd.value == "ALL The Stories":
             page.client_storage.set("objectsPage", requestF.copy())
             totalPages.value = int(len(page.client_storage.get("objectsPage")) / 9)
-        elif dd.value == "written by Larry Hama":
+        elif dd.value == "Written by Larry Hama":
             unique_sweets = []
             [unique_sweets.append(sweet) for sweet in [data for data in requestF for comic in data['Creadores'] if 'Larry Hama' in comic] if sweet not in unique_sweets]
             page.client_storage.set("objectsPage",unique_sweets)
