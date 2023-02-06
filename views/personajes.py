@@ -2,11 +2,6 @@ from flet import Page,MainAxisAlignment,CrossAxisAlignment,Row,Card,Text,colors,
 import services.personajes as PJ
 
 def main(page:  Page):
-
-    page.title = "Personajes"
-    page.vertical_alignment =  MainAxisAlignment.CENTER
-    page.horizontal_alignment =  CrossAxisAlignment.CENTER
-    requestF = PJ.get_data("personajes")()
     #Funcion de control de paginas
     def next_page(e):
         r.controls.clear()
@@ -146,7 +141,10 @@ def main(page:  Page):
         top_view = page.views[-1]
         page.go(top_view.route)
 
-
+    page.title = "Personajes"
+    page.vertical_alignment =  MainAxisAlignment.CENTER
+    page.horizontal_alignment =  CrossAxisAlignment.CENTER
+    requestF = PJ.get_data("personajes")()
     dd = Dropdown(
         width=250,
         alignment=alignment.top_right,
