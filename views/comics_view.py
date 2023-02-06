@@ -1,4 +1,5 @@
 import services.comics_service as cs
+from typing import Callable
 from enum import Enum
 import flet as ft
 
@@ -30,13 +31,7 @@ _actual_format_filter = FormatFilter.NONE.value
 _fetch_func = cs.get_comics(_pagination)
 
 
-def comics_view(page: ft.page):
-
-    # Configura la página
-    page.title = 'Comics'
-    page.vertical_alignment = ft.MainAxisAlignment.CENTER
-    page.horizontal_alignment = ft.CrossAxisAlignment.CENTER
-
+def comics_view(update_func: Callable):
     # Contenedor de los comics
     comics_content = ft.Row(
         wrap=True,
@@ -47,8 +42,10 @@ def comics_view(page: ft.page):
     )
 
     # Cuerpo de la página
-    body = ft.Container(comics_content)
-    page.add(body)
+    body = ft.Container(comics_content,
+                        margin=ft.margin.only(top=30),
+                        width=1280,
+                        height=720)
 
     def filter_comics(e):
         global _actual_format_filter
@@ -58,40 +55,26 @@ def comics_view(page: ft.page):
         fetch_comics()
 
     # Barra de navegación
-    page.appbar = ft.AppBar(
-        leading=ft.Container(ft.IconButton(
-            icon=ft.icons.KEYBOARD_RETURN_ROUNDED,
-            tooltip="Regresar al menú principal",
-        ),
-                             padding=ft.padding.all(5),
-                             alignment=ft.alignment.center),
+    appbar = ft.AppBar(
         title=ft.Text("Comics"),
         center_title=True,
         bgcolor=ft.colors.SURFACE_VARIANT,
         actions=[
-            ft.Container(
-                ft.PopupMenuButton(
-                    items=[
-                        ft.PopupMenuItem(
-                            content=ft.RadioGroup(content=ft.Column(
-                                list(
-                                    map(
-                                        lambda f: ft.Radio(value=f.value,
-                                                           label=f.value.
-                                                           capitalize()),
-                                        FormatFilter))),
-                                                  on_change=filter_comics))
-                        # ft.PopupMenuItem(text="Item 1"),
-                        # ft.PopupMenuItem(),  # divider
-                        # ft.PopupMenuItem(text="Checked item",
-                        #                  checked=False,
-                        #                  on_click=lambda e: print(e)),
-                    ],
-                    tooltip="Filtros",
-                    icon=ft.icons.FILTER_LIST),
-                padding=ft.padding.all(5),
-                alignment=ft.alignment.center,
-                margin=ft.margin.only(right=5)),
+            ft.Container(ft.PopupMenuButton(items=[
+                ft.PopupMenuItem(content=ft.RadioGroup(content=ft.Column(
+                    list(
+                        map(
+                            lambda f: ft.Radio(value=f.value,
+                                               label=f.value.capitalize()),
+                            FormatFilter))),
+                                                       on_change=filter_comics)
+                                 )
+            ],
+                                            tooltip="Filtros",
+                                            icon=ft.icons.FILTER_LIST),
+                         padding=ft.padding.all(5),
+                         alignment=ft.alignment.center,
+                         margin=ft.margin.only(right=5)),
         ],
     )
 
@@ -149,18 +132,19 @@ def comics_view(page: ft.page):
             ),
                          padding=ft.padding.only(top=20)))
 
-        page.update()
+        update_func()
 
     # render loading indicator
     def set_loading():
         # Muestra el indicador de carga
         comics_content.controls = [
-            ft.Column(
+            ft.Container(ft.Column(
                 [ft.ProgressRing(), ft.Text("Cargando...")],
                 horizontal_alignment=ft.CrossAxisAlignment.CENTER,
-            )
+            ),
+                         alignment=ft.alignment.center)
         ]
-        page.update()
+        update_func()
 
     # Para obtener los comics
     def fetch_comics():
@@ -177,7 +161,7 @@ def comics_view(page: ft.page):
                 ft.Text(
                     'No se han podido obtener los comics, intente de nuevo.')
             ]
-            page.update()
+            update_func()
 
     # Para la paginación
     def before_page(e):
@@ -203,5 +187,4 @@ def comics_view(page: ft.page):
     # First fetch
     fetch_comics()
 
-
-ft.app(target=comics_view)
+    return [appbar, body]
