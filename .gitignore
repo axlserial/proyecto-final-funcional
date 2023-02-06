@@ -137,10 +137,7 @@ __pycache__/
 
 # keys
 /services/keys.py
-<<<<<<< HEAD
 pyvenv.cfg
-=======
 
 # misc
 marvel_api_funcional.egg-info/
->>>>>>> fabdaa57cfda8cdfab374433a953fe929c21fa61
