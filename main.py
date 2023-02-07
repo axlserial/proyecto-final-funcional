@@ -1,5 +1,6 @@
 from views.principal import principal_view
 from views.comics_view import comics_view
+from views.personajes import characters_view
 import flet as ft
 
 
@@ -15,7 +16,6 @@ def main(page: ft.Page):
 
     def route_change(e):
         print("Route change:", e.route)
-
         page.views.clear()
 
         page.views.append(ft.View(
@@ -27,6 +27,12 @@ def main(page: ft.Page):
             page.views.append(ft.View(
                 "/comics",
                 comics_view(page.update),
+            ))
+
+        elif page.route == "/personajes":
+            page.views.append(ft.View(
+                "/personajes",
+                characters_view(page.update,page),
             ))
 
         page.update()
