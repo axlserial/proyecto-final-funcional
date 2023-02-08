@@ -1,0 +1,23 @@
+Primary: #D0BCFF
+Secondary: #CCC2DC
+Tertiary: #EFB8C8
+Error: #F2B8B5
+Background: #1C1B1F
+Outline: #938F99
+On Primary: #381E72
+On Secondary: #332D41
+On Tertiary: #492532
+On Error: #601410
+On Background: #E6E1E5
+Primary Container: #4F378B
+Secondary Container: #4A4458
+Tertiary Container: #633B48
+Error Container: #8C1D18
+Surface: #1C1B1F
+On Primary Container: #EADDFF
+On Secondary Container: #E8DEF8
+On Tertiary Container: #FFD8E4
+On Error Container: #F9DEDC
+On Surface: #E6E1E5
+Surface-Variant: #49454F
+On Surface-Variant: #CAC4D0
