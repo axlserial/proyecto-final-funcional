@@ -40,11 +40,3 @@ colores_gen = (tuple(color.split(":")) for color in lista_archivo if color != ""
 # Creamos un diccionario que tendra como clave el nombre del color y como valor su valor en hexadecimal
 
 COLOR_PALETTE = dict(colores_gen)
-
-print(COLOR_PALETTE)
-    
-    
-    
-    
-
-    
