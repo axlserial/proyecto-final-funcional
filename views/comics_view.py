@@ -1,4 +1,5 @@
 import services.comics_service as cs
+from utils import COLOR_PALETTE
 from typing import Callable
 import flet as ft
 
@@ -35,7 +36,7 @@ def comics_view(update_func: Callable):
     appbar = ft.AppBar(
         title=ft.Text("Comics"),
         center_title=True,
-        bgcolor=ft.colors.SURFACE_VARIANT,
+        bgcolor=COLOR_PALETTE["On-Tertiary"],
         toolbar_height=50,
     )
 
@@ -78,7 +79,10 @@ def comics_view(update_func: Callable):
                     [dp],
                     alignment="center",
                 ),
-                comics_content,
+                ft.Container(
+                    comics_content,
+                    margin=ft.margin.only(top=30),
+                ),
             ]
         ),
         margin=ft.margin.only(top=30),
@@ -118,9 +122,7 @@ def comics_view(update_func: Callable):
                     ),
                     width=230,
                     height=230,
-                    bgcolor="#4f378a",
-                    ink=True,
-                    on_click=lambda e: print(comic["id"]),
+                    bgcolor=COLOR_PALETTE["On-Error"],
                 ),
                 _comics,
             )
@@ -190,7 +192,9 @@ def comics_view(update_func: Callable):
             _comics = result["results"]
             render_comics()
         else:
-            body.controls = [ft.Text("No se han podido obtener los comics, intente de nuevo.")]
+            comics_content.controls = [
+                ft.Text("No se han podido obtener los comics, intente de nuevo.")
+            ]
             update_func()
 
     # Para la paginación
