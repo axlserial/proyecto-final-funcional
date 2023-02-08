@@ -4,17 +4,20 @@ import requests
 
 
 # Clousure para obtener los comics
-def get_comics(pagination: dict[str, int]):
+def get_comics(extra_params: dict[str, int]):
 
     def get_data():
         payload = generate_payload()
 
-        # Añade la paginación
-        payload.update(pagination)
+        # Añade los parámetros extra
+        payload.update(extra_params)
 
         # Hace la petición
         response = requests.get(
             'https://gateway.marvel.com:443/v1/public/comics', params=payload)
+
+        # Impresión de la petición
+        print(f"Request: {response.url}\n")
 
         result: dict = {}
 
