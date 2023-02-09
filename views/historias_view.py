@@ -1,7 +1,9 @@
-from flet import Page,MainAxisAlignment,CrossAxisAlignment,Row,Card,Text,border,border_radius,app,IconButton,Container,Stack,alignment,icons,WEB_BROWSER,Column,Dropdown,dropdown,margin,padding
-import services.historias as PJ
+import flet as ft
+from typing import Callable
+import services.historias_service as PJ
+from utils import COLOR_PALETTE
 
-def main(page:  Page):
+def stories_view(update_func: Callable, page : ft.Page):
     #Funcion de control de paginas
     def next_page(e):
         r.controls.clear()
@@ -27,21 +29,21 @@ def main(page:  Page):
             if int(txt_number.value) == int(totalPages.value):
                 for i in range(((-9)+(int(txt_number.value)*9))+1, (len(cardsPage))+1):
                     r.controls.append(
-                        Card(
-                            Container(
-                                Column(
+                        ft.Card(
+                            ft.Container(
+                                ft.Column(
                                     [
-                                        Text(cardsPage[i-1]["id"],color = "#381e72",selectable=False,text_align = "center" ,size=12 , ),
-                                        Text(cardsPage[i-1]["comics"][0],color = "#381e72", text_align = "justify" , selectable=False , ),
+                                        ft.Text(cardsPage[i-1]["id"],color = "#381e72",selectable=False,text_align = "center" ,size=12 , ),
+                                        ft.Text(cardsPage[i-1]["comics"][0],color = "#381e72", text_align = "justify" , selectable=False , ),
                                     ],
-                                    alignment=MainAxisAlignment.START,
-                                    horizontal_alignment = CrossAxisAlignment.CENTER,
+                                    alignment=ft.MainAxisAlignment.START,
+                                    horizontal_alignment = ft.CrossAxisAlignment.CENTER,
                                 ),
                                 bgcolor= "#cfbcff",
-                                border= border.all(1,  "#C4ACFF"),
-                                padding= padding.only(left=10,top = 10 , right= 10, bottom= 0),
-                                border_radius= border_radius.all(5),
-                                alignment = alignment.center,
+                                border= ft.border.all(1,  "#C4ACFF"),
+                                padding= ft.padding.only(left=10,top = 10 , right= 10, bottom= 0),
+                                border_radius= ft.border_radius.all(5),
+                                alignment = ft.alignment.center,
                             ),
                             width=200,
                             height=200,
@@ -50,21 +52,21 @@ def main(page:  Page):
             else:
                 for i in range(((-9)+(int(txt_number.value)*9))+1 ,(int(txt_number.value)*9)+1):
                     r.controls.append(
-                        Card(
-                            Container(
-                                Column(
+                        ft.Card(
+                            ft.Container(
+                                ft.Column(
                                     [
-                                        Text(cardsPage[i-1]["id"],color = "#381e72",selectable=False,text_align = "center" , size=12 ,),
-                                        Text(cardsPage[i-1]["comics"][0],color = "#381e72", text_align = "justify" , selectable=False , ),
+                                        ft.Text(cardsPage[i-1]["id"],color = "#381e72",selectable=False,text_align = "center" , size=12 ,),
+                                        ft.Text(cardsPage[i-1]["comics"][0],color = "#381e72", text_align = "justify" , selectable=False , ),
                                     ],
-                                    alignment=MainAxisAlignment.START,
-                                    horizontal_alignment = CrossAxisAlignment.CENTER,
+                                    alignment=ft.MainAxisAlignment.START,
+                                    horizontal_alignment = ft.CrossAxisAlignment.CENTER,
                                 ),
                                 bgcolor= "#cfbcff",
-                                border= border.all(1, "#C4ACFF"),
-                                padding= padding.only(left=10,top = 10 , right= 10, bottom= 0),
-                                border_radius= border_radius.all(5),
-                                alignment = alignment.center,
+                                border= ft.border.all(1, "#C4ACFF"),
+                                padding= ft.padding.only(left=10,top = 10 , right= 10, bottom= 0),
+                                border_radius= ft.border_radius.all(5),
+                                alignment = ft.alignment.center,
                             ),
                             width=200,
                             height=200,
@@ -72,26 +74,26 @@ def main(page:  Page):
                     )
         else:
             r.controls.append(
-                Card(
-                    Container(
-                        Column(
+                ft.Card(
+                    ft.Container(
+                        ft.Column(
                             [
-                                Text("No hay personajes", text_align = "center" ,color = "#381e72", selectable=False ),
+                                ft.Text("No hay personajes", text_align = "center" ,color = "#381e72", selectable=False ),
                             ],
-                            alignment=MainAxisAlignment.CENTER,
-                            horizontal_alignment = CrossAxisAlignment.CENTER,
+                            alignment=ft.MainAxisAlignment.CENTER,
+                            horizontal_alignment = ft.CrossAxisAlignment.CENTER,
                         ),
                         bgcolor= "#ffb4ab",
-                        border= border.all(1,"#FCA196"),
-                        border_radius= border_radius.all(5),
-                        alignment = alignment.center,
+                        border= ft.border.all(1,"#FCA196"),
+                        border_radius= ft.border_radius.all(5),
+                        alignment = ft.alignment.center,
                     ),
                     width=200,
                     height=200,
                 ),
             ),
 
-        page.update()
+        update_func()
 
     def dropdown_changed(e):
         r.controls.clear()
@@ -128,58 +130,53 @@ def main(page:  Page):
 
         cards(page.client_storage.get("objectsPage"))
 
-    def  GoHome():
-        page.views.pop()
-        top_view = page.views[-1]
-        page.go(top_view.route)
 
-    page.title = "Historias"
-    page.vertical_alignment =  MainAxisAlignment.CENTER
-    page.horizontal_alignment =  CrossAxisAlignment.CENTER
     requestF = PJ.get_data("stories")()
     page.client_storage.set("objectsPage" ,requestF.copy())
-    txt_number =  Text(value="1",text_align="center",width=50)
-    totalPages = Text(value=int(len(page.client_storage.get("objectsPage")) / 9),text_align="center",width=50)
-    r =  Row(wrap=True, scroll="none", expand=True,)
-    dd = Dropdown(
+    txt_number =  ft.Text(value="1",text_align="center",width=50)
+    totalPages = ft.Text(value=int(len(page.client_storage.get("objectsPage")) / 9),text_align="center",width=50)
+    r =  ft.Row(wrap=True, scroll="none", expand=True,)
+    dd = ft.Dropdown(
         width=250,
-        alignment=alignment.top_right,
+        alignment=ft.alignment.top_right,
         hint_text="Choose your filter",
+        text_size= 20,
         on_change=dropdown_changed,
         options=[
-            dropdown.Option("ALL The Stories"),
-            dropdown.Option("Written by Larry Hama"),
-            dropdown.Option("The *Avengers* stories"),
-            dropdown.Option("X-MEN stories"),
+            ft.dropdown.Option("ALL The Stories"),
+            ft.dropdown.Option("Written by Larry Hama"),
+            ft.dropdown.Option("The *Avengers* stories"),
+            ft.dropdown.Option("X-MEN stories"),
         ],
     )
-    
-    cards(page.client_storage.get("objectsPage"))
 
-    page.add(
-        Column(
-            
+    
+    appbar=ft.AppBar(
+            title=ft.Text("Historias", text_align="center", size=30, color = "#ffb0c9"),
+            center_title=True,
+            bgcolor=ft.colors.SURFACE_VARIANT,
+            actions=[
+                ft.Container(
+                    content = ft.Row([dd,],alignment = ft.MainAxisAlignment.END,),
+                    width = 800,
+                    height=300,
+                    margin = ft.margin.only(left=0,top=10,right=0,bottom=5),
+                    alignment= ft.alignment.bottom_center ,
+                ),
+            ],
+    )
+
+    body =  ft.Container(
+        ft.Column(
             [   
-                Container(
-                    content = IconButton( icon=icons.HOME, on_click=GoHome, data=0 , icon_size=35),
-                    padding= 0,
-                    margin = margin.only(left=10,top = 0 , right= 0, bottom= 0),
-                    alignment= alignment.center_left,
-                ),
-                Container(
-                    content = Text("Historias", text_align="center", size=30, color = "#ffb0c9"),
-                    padding= 0,
-                    margin = margin.only(left=0,top = 0 , right= 0, bottom= 5),
-                    alignment= alignment.top_center,
-                ),
-                Container(
-                    content = Row([dd,],alignment = MainAxisAlignment.END,),
+                ft.Container(
+                    content = ft.Row([dd,],alignment = ft.MainAxisAlignment.END,),
                     width = 800,
                     margin= 20,
                 ),
 
-                Container(
-                    Stack(
+                ft.Container(
+                    ft.Stack(
                         #Cuadricula INFO
                         [
                             r
@@ -189,32 +186,32 @@ def main(page:  Page):
                     padding=5,
                     width=800,
                     height=650,
-                    alignment= alignment.center,
+                    alignment= ft.alignment.center,
                 ),
                 #Fila de flechas pra siguiente pagina
-                Row(
+                ft.Row(
                     [
-                        IconButton(icons.NAVIGATE_BEFORE_ROUNDED,on_click=before_page),
+                        ft.IconButton(ft.icons.NAVIGATE_BEFORE_ROUNDED,on_click=before_page),
                         txt_number,
-                        IconButton(icons.NAVIGATE_NEXT_ROUNDED,on_click=next_page),
+                        ft.IconButton(ft.icons.NAVIGATE_NEXT_ROUNDED,on_click=next_page),
                     ],
-                    alignment= MainAxisAlignment.CENTER,
+                    alignment= ft.MainAxisAlignment.CENTER,
                 ),
-                Row(
+                ft.Row(
                     [
                         totalPages,
                     ],
-                    alignment= MainAxisAlignment.END,
+                    alignment= ft.MainAxisAlignment.END,
                 ),
 
             ],
-            horizontal_alignment = CrossAxisAlignment.CENTER,
+            horizontal_alignment = ft.CrossAxisAlignment.CENTER,
             alignment = 'center',
         ),
     )
 
+    cards(page.client_storage.get("objectsPage"))
 
-
-app(target=main)
+    return [appbar, body]
 
 
