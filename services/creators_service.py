@@ -2,8 +2,8 @@ from .payload import generate_payload
 import requests
 
 
-# Clousure para obtener los comics
-def get_comics(extra_params: dict[str, int]):
+# Clousure para obtener a los creators
+def get_creators(extra_params: dict[str, int]):
 
     def get_data():
         payload = generate_payload()
@@ -13,7 +13,7 @@ def get_comics(extra_params: dict[str, int]):
 
         # Hace la petición
         response = requests.get(
-            'https://gateway.marvel.com:443/v1/public/comics', params=payload)
+            'https://gateway.marvel.com:443/v1/public/creators', params=payload)
 
         # Impresión de la petición
         print(f"Request: {response.url}\n")

@@ -1,82 +1,62 @@
-import services.comics_service as cs
+import services.creators_service as cs
 from utils import COLOR_PALETTE
 from typing import Callable
 import flet as ft
 
 # data de los comics
-_total_comics: int = 0
-_comics: list[dict[str, any]] = []
+_total_creators: int = 0
+_creators: list[dict[str, any]] = []
 
-# Para la paginación
-_params = {"limit": 10, "offset": 0}
+# Parametros para las peticiones
+_params = {"limit": 10, "offset": 0, "orderBy": "-modified"}
 
 
-# Filtro de comics por formato
-# format_filters = [
-#     "none",
-#     "comic",
-#     "magazine",
-#     "trade paperback",
-#     "hardcover",
-#     "digest",
-#     "graphic novel",
-#     "digital comic",
-#     "infinite comic",
-# ]
-
-format_filters = {
+# Order creators by:
+_order_by = {
     "none": "No ordenar",
-    "comic": "Comic",
-    "magazine": "Revista",
-    "trade paperback": "Trade Paperback",
-    "hardcover": "Tapa Dura",
-    "digest": "Boletín",
-    "graphic novel": "Novela Gráfica",
-    "digital comic": "Comic Digital",
-    "infinite comic": "Comic Infinito",
+    "firstName": "Primer Nombre",
+    "lastName": "Apellido",
 }
 
-# Filtro por formato de comic
-# _actual_format_filter = format_filters[0]
-_actual_format_filter = "none"
+# Actual forma de ordenar
+_actual_order = "none"
 
-# Para obtener los comics
-_fetch_func = cs.get_comics(_params)
+# Para obtener los creators
+_fetch_func = cs.get_creators(_params)
 
 
-def comics_view(update_func: Callable):
+def creators_view(update_func: Callable):
     # Barra de navegación
     appbar = ft.AppBar(
-        title=ft.Text("Comics"),
+        title=ft.Text("Creadores"),
         center_title=True,
         bgcolor=COLOR_PALETTE["On-Tertiary"],
         toolbar_height=50,
     )
 
-    def filter_comics(e):
-        global _actual_format_filter, _params
-        _actual_format_filter = str(dp.value)
-        _params["offset"] = 0
+    def order_creators(e):
+        global _actual_order, _params
+        _actual_order = str(dp.value)
 
         set_loading()
-        fetch_comics()
+        fetch_creators()
 
-    # Dropdown de filtros
+    # Dropdown para las formas de ordenar
     dp = ft.Dropdown(
-        label="Filtrar por",
+        label="Ordenar por",
         options=list(
             map(
-                lambda f: ft.dropdown.Option(text=f[1], key=f[0]),
-                format_filters.items(),
+                lambda o: ft.dropdown.Option(text=o[1], key=o[0]),
+                _order_by.items(),
             )
         ),
         autofocus=True,
         value="none",
-        on_change=filter_comics,
+        on_change=order_creators,
     )
 
-    # Contenedor de los comics
-    comics_content = ft.Row(
+    # Contenedor de los creators
+    creators_content = ft.Row(
         wrap=True,
         expand=True,
         scroll="always",
@@ -93,7 +73,7 @@ def comics_view(update_func: Callable):
                     alignment="center",
                 ),
                 ft.Container(
-                    comics_content,
+                    creators_content,
                     margin=ft.margin.only(top=30),
                 ),
             ]
@@ -101,24 +81,24 @@ def comics_view(update_func: Callable):
         margin=ft.margin.only(top=30),
     )
 
-    # Renderiza los comics
-    def render_comics():
+    # Renderiza los creators
+    def render_creators():
         # Habilita el dropdown
         dp.disabled = False
 
-        # Limpia contenedor de comics
-        comics_content.controls.clear()
+        # Limpia contenedor de creators
+        creators_content.controls.clear()
 
-        # Genera los comics
-        comics_content.controls = list(
+        # Genera los creators
+        creators_content.controls = list(
             map(
-                lambda comic: ft.Container(
+                lambda creator: ft.Container(
                     ft.Card(
                         content=ft.Stack(
                             [
                                 ft.Container(
                                     ft.Image(
-                                        src=f"{comic['thumbnail']['path']}.{comic['thumbnail']['extension']}",
+                                        src=f"{creator['thumbnail']['path']}.{creator['thumbnail']['extension']}",
                                         width=120,
                                         height=120,
                                     ),
@@ -126,7 +106,10 @@ def comics_view(update_func: Callable):
                                     padding=ft.padding.only(top=25, bottom=5),
                                 ),
                                 ft.Container(
-                                    ft.Text(comic["title"], text_align="center"),
+                                    ft.Text(
+                                        f"{creator['fullName']}",
+                                        text_align="center",
+                                    ),
                                     alignment=ft.alignment.bottom_center,
                                     padding=ft.padding.only(left=5, right=5, bottom=15),
                                 ),
@@ -137,14 +120,14 @@ def comics_view(update_func: Callable):
                     height=230,
                     bgcolor=COLOR_PALETTE["On-Error"],
                 ),
-                _comics,
+                _creators,
             )
         )
 
         # Añade la paginación (numero de pagina actual)
         pag_text = f"{int(_params['offset'] / _params['limit']) + 1}"
-        pag_text += f" de {int(_total_comics / _params['limit']) + 1} páginas"
-        comics_content.controls.append(
+        pag_text += f" de {int(_total_creators / _params['limit']) + 1} páginas"
+        creators_content.controls.append(
             ft.Container(
                 ft.Row(
                     [
@@ -156,7 +139,7 @@ def comics_view(update_func: Callable):
                         ft.Text(pag_text),
                         ft.IconButton(
                             icon=ft.icons.ARROW_FORWARD,
-                            disabled=_params["offset"] + _params["limit"] >= _total_comics,
+                            disabled=_params["offset"] + _params["limit"] >= _total_creators,
                             on_click=next_page,
                         ),
                     ],
@@ -174,7 +157,7 @@ def comics_view(update_func: Callable):
         dp.disabled = True
 
         # Muestra el indicador de carga
-        comics_content.controls = [
+        creators_content.controls = [
             ft.Container(
                 ft.Column(
                     [ft.ProgressRing(), ft.Text("Cargando...")],
@@ -186,27 +169,25 @@ def comics_view(update_func: Callable):
         ]
         update_func()
 
-    # Para obtener los comics
-    def fetch_comics():
-        global _total_comics, _comics, _params
-
-        # Si el filtro es none, se elimina el parametro de la consulta
-        if "format" in _params:
-            del _params["format"]
-
-        # Si el filtro es distinto de none, se agrega el parametro de la consulta
-        if _actual_format_filter != "none":
-            _params["format"] = _actual_format_filter
+    # Para obtener los creators
+    def fetch_creators():
+        global _total_creators, _creators, _params
 
         result = _fetch_func()
 
         if result != {}:
-            _total_comics = result["total"]
-            _comics = result["results"]
-            render_comics()
+            _total_creators = result["total"]
+
+            if _actual_order != "none":
+                print("Ordenando por", _actual_order)
+                _creators = sorted(result["results"], key=lambda c: c[_actual_order])
+            else:
+                _creators = result["results"]
+
+            render_creators()
         else:
-            comics_content.controls = [
-                ft.Text("No se han podido obtener los comics, intente de nuevo.")
+            creators_content.controls = [
+                ft.Text("No se han podido obtener los creators, intente de nuevo.")
             ]
             update_func()
 
@@ -219,19 +200,19 @@ def comics_view(update_func: Callable):
 
         set_loading()
         _params["offset"] -= _params["limit"]
-        fetch_comics()
+        fetch_creators()
 
     def next_page(e):
         global _params, _total_comics
 
-        if _params["offset"] + _params["limit"] >= _total_comics:
+        if _params["offset"] + _params["limit"] >= _total_creators:
             return
 
         set_loading()
         _params["offset"] += _params["limit"]
-        fetch_comics()
+        fetch_creators()
 
     # First fetch
-    fetch_comics()
+    fetch_creators()
 
     return [appbar, body]

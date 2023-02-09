@@ -1,11 +1,11 @@
 from views.principal import principal_view
 from views.comics_view import comics_view
 from views.personajes import characters_view
+from views.creators_views import creators_view
 import flet as ft
 
 
 def main(page: ft.Page):
-
     # Ventana principal
     page.bgcolor = "#1c1b1e"
     page.title = "Marvel API"
@@ -18,22 +18,36 @@ def main(page: ft.Page):
         print("Route change:", e.route)
         page.views.clear()
 
-        page.views.append(ft.View(
-            "/",
-            principal_view(page.go),
-        ))
+        page.views.append(
+            ft.View(
+                "/",
+                principal_view(page.go),
+            )
+        )
 
         if page.route == "/comics":
-            page.views.append(ft.View(
-                "/comics",
-                comics_view(page.update),
-            ))
+            page.views.append(
+                ft.View(
+                    "/comics",
+                    comics_view(page.update),
+                )
+            )
+
+        elif page.route == "/creadores":
+            page.views.append(
+                ft.View(
+                    "/creadores",
+                    creators_view(page.update),
+                )
+            )
 
         elif page.route == "/personajes":
-            page.views.append(ft.View(
-                "/personajes",
-                characters_view(page.update,page),
-            ))
+            page.views.append(
+                ft.View(
+                    "/personajes",
+                    characters_view(page.update, page),
+                )
+            )
 
         page.update()
 
