@@ -13,7 +13,10 @@ def get_data(type: str) -> Callable:
         if response.status_code == 200:
             # Devuelve los comics
             #return response.json()['data']['results']
-            return [{"id":data['id'],"nombre":data['title'],"comics":list(map(lambda x : x['name'],data['comics']['items'])), "Creadores": list(map(lambda x : x['name'],data['creators']['items'])), "Series" : list(map(lambda x : x['name'],data['series']['items']))} for data in response.json()['data']['results']]
+            return [{"id":data['id'],"nombre":data['title'],"comics":list(map(lambda x : x['name'],
+            data['comics']['items'])), "Creadores": list(map(lambda x : x['name'],data['creators']['items'])), 
+            "Series" : list(map(lambda x : x['name'],data['series']['items']))} 
+            for data in response.json()['data']['results']]
 
         # Si la petición no es correcta
         else:
