@@ -27,7 +27,7 @@ def characters_view(update_func: Callable, page : ft.Page):
     def cards(cardsPage):
         if cardsPage != []:
             if int(txt_number.value) == int(totalPages.value):
-                for i in range(((-9)+(int(txt_number.value)*9))+1, (len(cardsPage))+1):
+                [
                     r.controls.append(
                         ft.Card(
                             ft.Container(
@@ -54,8 +54,12 @@ def characters_view(update_func: Callable, page : ft.Page):
                             height=200,
                         )
                     )
+
+                    for i in range(((-9)+(int(txt_number.value)*9))+1, (len(cardsPage))+1)
+                ]
+
             else:
-                for i in range(((-9)+(int(txt_number.value)*9))+1 ,(int(txt_number.value)*9)+1):
+                [
                     r.controls.append(
                         ft.Card(
                             ft.Container(
@@ -82,6 +86,10 @@ def characters_view(update_func: Callable, page : ft.Page):
                             height=200,
                         )
                     )
+
+                    for i in range(((-9)+(int(txt_number.value)*9))+1 ,(int(txt_number.value)*9)+1)
+                ]
+
         else:
             r.controls.append(
                 ft.Card(
