@@ -1,7 +1,9 @@
 from views.principal import principal_view
 from views.comics_view import comics_view
-from views.personajes import characters_view
+from views.personajes_view import characters_view
 from views.creators_views import creators_view
+from views.historias_view import stories_view
+
 import flet as ft
 
 
@@ -49,7 +51,15 @@ def main(page: ft.Page):
                 )
             )
 
-        page.update()
+        elif page.route == "/historias":
+            page.views.append(
+                ft.View(
+                    "/historias",
+                    stories_view(page.update, page),
+                )
+            )
+
+        #page.update()
 
     def view_pop(e):
         print("View pop:", e.view)
