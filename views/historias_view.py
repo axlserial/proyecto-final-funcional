@@ -170,12 +170,6 @@ def stories_view(update_func: Callable, page : ft.Page):
         ft.Column(
             [   
                 ft.Container(
-                    content = ft.Row([dd,],alignment = ft.MainAxisAlignment.END,),
-                    width = 800,
-                    margin= 20,
-                ),
-
-                ft.Container(
                     ft.Stack(
                         #Cuadricula INFO
                         [
