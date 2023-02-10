@@ -31,7 +31,7 @@ def series_view(update_func: Callable):
     appbar = ft.AppBar(
         title=ft.Text("Series"),
         center_title=True,
-        bgcolor=COLOR_PALETTE["On-Tertiary"],
+        bgcolor=COLOR_PALETTE["On-Secondary"],
         toolbar_height=50,
     )
 
@@ -122,7 +122,7 @@ def series_view(update_func: Callable):
                     ),
                     width=230,
                     height=230,
-                    bgcolor=COLOR_PALETTE["On-Error"],
+                    bgcolor=COLOR_PALETTE["On-Primary"],
                 ),
                 _series,
             )
