@@ -3,6 +3,9 @@ from views.comics_view import comics_view
 from views.personajes_view import characters_view
 from views.creators_views import creators_view
 from views.historias_view import stories_view
+from views.eventos_view import events_view
+from views.series_view import series_view
+
 
 import flet as ft
 
@@ -56,6 +59,22 @@ def main(page: ft.Page):
                 ft.View(
                     "/historias",
                     stories_view(page.update, page),
+                )
+            )
+            
+        elif page.route == "/eventos":
+            page.views.append(
+                ft.View(
+                    "/eventos",
+                    events_view(page.update),
+                )
+            )
+            
+        elif page.route == "/series":
+            page.views.append(
+                ft.View(
+                    "/series",
+                    series_view(page.update),
                 )
             )
 
